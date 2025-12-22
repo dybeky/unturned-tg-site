@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unturned Server - Формы</title>
+    <meta name="description" content="Отправьте идею или жалобу для сервера Unturned" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      const IDEA_WEBHOOK_URL = 'YOUR_IDEA_WEBHOOK_URL_HERE';
+      const COMPLAINT_WEBHOOK_URL = 'YOUR_COMPLAINT_WEBHOOK_URL_HERE';
+
+      const CATEGORY_LABELS = {
+        gameplay: 'Игровой процесс',
+        events: 'События',
+        economy: 'Экономика',
+        technical: 'Технические улучшения',
+        other: 'Другое'
+      };
+
+      const REASON_LABELS = {
+        grief: 'Гриферство',
+        abuse: 'Оскорбления',
+        cheat: 'Читы/Нечестная игра',
+        spam: 'Спам',
+        scam: 'Мошенничество',
+        other: 'Другое'
+      };
+
+      async function sendToDiscord(webhookUrl, embedData) {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ embeds: [embedData] })
+        });
+
+        if (!response.ok) {
+          throw new Error('Ошибка отправки');
+        }
+      }
+
+      function ServerForms() {
+        const [activeTab, setActiveTab] = useState('ideas');
+        const [isSubmitting, setIsSubmitting] = useState(false);
+        const [ideaForm, setIdeaForm] = useState({
+          nickname: '',
+          ideaTitle: '',
+          description: '',
+          category: ''
+        });
+        const [complaintForm, setComplaintForm] = useState({
+          yourNickname: '',
+          targetNickname: '',
+          reason: '',
+          description: '',
+          proof: ''
+        });
+
+        const handleIdeaSubmit = async () => {
+          if (!ideaForm.nickname || !ideaForm.ideaTitle || !ideaForm.description || !ideaForm.category) {
+            alert('Пожалуйста, заполните все поля');
+            return;
+          }
+
+          if (IDEA_WEBHOOK_URL === 'YOUR_IDEA_WEBHOOK_URL_HERE') {
+            alert('Ошибка: Webhook URL не настроен. Пожалуйста, добавьте ваш Discord Webhook URL в код.');
+            return;
+          }
+
+          setIsSubmitting(true);
+
+          try {
+            const embed = {
+              title: '💡 Новая идея',
+              color: 16766720,
+              fields: [
+                { name: 'Автор', value: ideaForm.nickname, inline: true },
+                { name: 'Категория', value: CATEGORY_LABELS[ideaForm.category], inline: true },
+                { name: 'Название', value: ideaForm.ideaTitle },
+                { name: 'Описание', value: ideaForm.description }
+              ],
+              timestamp: new Date().toISOString()
+            };
+
+            await sendToDiscord(IDEA_WEBHOOK_URL, embed);
+            alert('Ваша идея успешно отправлена!');
+            setIdeaForm({ nickname: '', ideaTitle: '', description: '', category: '' });
+          } catch (error) {
+            alert('Произошла ошибка при отправке. Попробуйте позже.');
+            console.error('Error:', error);
+          } finally {
+            setIsSubmitting(false);
+          }
+        };
+
+        const handleComplaintSubmit = async () => {
+          if (!complaintForm.yourNickname || !complaintForm.targetNickname || !complaintForm.reason || !complaintForm.description) {
+            alert('Пожалуйста, заполните все обязательные поля');
+            return;
+          }
+
+          if (COMPLAINT_WEBHOOK_URL === 'YOUR_COMPLAINT_WEBHOOK_URL_HERE') {
+            alert('Ошибка: Webhook URL не настроен. Пожалуйста, добавьте ваш Discord Webhook URL в код.');
+            return;
+          }
+
+          setIsSubmitting(true);
+
+          try {
+            const embed = {
+              title: '🚨 Новая жалоба',
+              color: 5763719,
+              fields: [
+                { name: 'От кого', value: complaintForm.yourNickname, inline: true },
+                { name: 'На кого', value: complaintForm.targetNickname, inline: true },
+                { name: 'Причина', value: REASON_LABELS[complaintForm.reason] },
+                { name: 'Описание', value: complaintForm.description }
+              ],
+              timestamp: new Date().toISOString()
+            };
+
+            if (complaintForm.proof) {
+              embed.fields.push({ name: 'Доказательства', value: complaintForm.proof });
+            }
+
+            await sendToDiscord(COMPLAINT_WEBHOOK_URL, embed);
+            alert('Ваша жалоба успешно отправлена!');
+            setComplaintForm({ yourNickname: '', targetNickname: '', reason: '', description: '', proof: '' });
+          } catch (error) {
+            alert('Произошла ошибка при отправке. Попробуйте позже.');
+            console.error('Error:', error);
+          } finally {
+            setIsSubmitting(false);
+          }
+        };
+
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+            <div className="max-w-2xl mx-auto">
+              <div className="flex gap-1 mb-6">
+                <button
+                  onClick={() => setActiveTab('ideas')}
+                  className={`flex-1 px-6 py-3 rounded-t-lg font-medium transition-all ${
+                    activeTab === 'ideas'
+                      ? 'bg-gray-800 text-white border-b-2 border-yellow-500'
+                      : 'bg-gray-700 text-gray-400 hover:bg-gray-650'
+                  }`}
+                >
+                  <span className="inline-block w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                  идеи для сервера
+                </button>
+                <button
+                  onClick={() => setActiveTab('complaints')}
+                  className={`flex-1 px-6 py-3 rounded-t-lg font-medium transition-all ${
+                    activeTab === 'complaints'
+                      ? 'bg-gray-800 text-white border-b-2 border-green-500'
+                      : 'bg-gray-700 text-gray-400 hover:bg-gray-650'
+                  }`}
+                >
+                  <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                  жалобы на состав
+                </button>
+              </div>
+
+              <div className="bg-gray-800 rounded-b-lg rounded-tr-lg p-8 shadow-2xl">
+                {activeTab === 'ideas' && (
+                  <div className="space-y-5">
+                    <h2 className="text-2xl font-bold text-white mb-6">Предложить идею</h2>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Ваш ник</label>
+                      <input
+                        type="text"
+                        value={ideaForm.nickname}
+                        onChange={(e) => setIdeaForm({ ...ideaForm, nickname: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        placeholder="Введите ваш игровой ник"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Название идеи</label>
+                      <input
+                        type="text"
+                        value={ideaForm.ideaTitle}
+                        onChange={(e) => setIdeaForm({ ...ideaForm, ideaTitle: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        placeholder="Краткое название вашей идеи"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Категория</label>
+                      <select
+                        value={ideaForm.category}
+                        onChange={(e) => setIdeaForm({ ...ideaForm, category: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      >
+                        <option value="">Выберите категорию</option>
+                        <option value="gameplay">Игровой процесс</option>
+                        <option value="events">События</option>
+                        <option value="economy">Экономика</option>
+                        <option value="technical">Технические улучшения</option>
+                        <option value="other">Другое</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Описание идеи</label>
+                      <textarea
+                        value={ideaForm.description}
+                        onChange={(e) => setIdeaForm({ ...ideaForm, description: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 h-32 resize-none"
+                        placeholder="Подробно опишите вашу идею..."
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleIdeaSubmit}
+                      disabled={isSubmitting}
+                      className={`w-full font-bold py-3 rounded-lg transition-all transform ${
+                        isSubmitting
+                          ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                          : 'bg-yellow-500 hover:bg-yellow-600 text-gray-900 hover:scale-105'
+                      }`}
+                    >
+                      {isSubmitting ? 'Отправка...' : 'Отправить идею'}
+                    </button>
+                  </div>
+                )}
+
+                {activeTab === 'complaints' && (
+                  <div className="space-y-5">
+                    <h2 className="text-2xl font-bold text-white mb-6">Подать жалобу</h2>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Ваш ник</label>
+                      <input
+                        type="text"
+                        value={complaintForm.yourNickname}
+                        onChange={(e) => setComplaintForm({ ...complaintForm, yourNickname: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Введите ваш игровой ник"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Ник нарушителя</label>
+                      <input
+                        type="text"
+                        value={complaintForm.targetNickname}
+                        onChange={(e) => setComplaintForm({ ...complaintForm, targetNickname: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Ник игрока/состава"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Причина жалобы</label>
+                      <select
+                        value={complaintForm.reason}
+                        onChange={(e) => setComplaintForm({ ...complaintForm, reason: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      >
+                        <option value="">Выберите причину</option>
+                        <option value="grief">Гриферство</option>
+                        <option value="abuse">Оскорбления</option>
+                        <option value="cheat">Читы/Нечестная игра</option>
+                        <option value="spam">Спам</option>
+                        <option value="scam">Мошенничество</option>
+                        <option value="other">Другое</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Описание нарушения</label>
+                      <textarea
+                        value={complaintForm.description}
+                        onChange={(e) => setComplaintForm({ ...complaintForm, description: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 h-32 resize-none"
+                        placeholder="Подробно опишите что произошло..."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">Доказательства (ссылки)</label>
+                      <input
+                        type="text"
+                        value={complaintForm.proof}
+                        onChange={(e) => setComplaintForm({ ...complaintForm, proof: e.target.value })}
+                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Ссылки на скриншоты, видео и т.д."
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleComplaintSubmit}
+                      disabled={isSubmitting}
+                      className={`w-full font-bold py-3 rounded-lg transition-all transform ${
+                        isSubmitting
+                          ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                          : 'bg-green-500 hover:bg-green-600 text-white hover:scale-105'
+                      }`}
+                    >
+                      {isSubmitting ? 'Отправка...' : 'Отправить жалобу'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<ServerForms />);
+    </script>
+  </body>
+</html>
