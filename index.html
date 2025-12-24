@@ -8,7 +8,7 @@
     <link rel="icon" type="image/svg+xml" href="./public/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,12 +17,12 @@
         }
 
         body {
-            font-family: 'Press Start 2P', cursive;
+            font-family: 'Rubik', sans-serif;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
             min-height: 100vh;
             padding: 24px;
             color: #fff;
-            font-size: 10px;
+            font-size: 16px;
             line-height: 1.6;
         }
 
@@ -40,10 +40,10 @@
         }
 
         .header h1 {
-            font-size: 1.2rem;
-            font-weight: normal;
+            font-size: 2rem;
+            font-weight: 600;
             letter-spacing: 0.05em;
-            line-height: 1.8;
+            line-height: 1.4;
         }
 
         .tabs {
@@ -57,12 +57,12 @@
             flex: 1;
             padding: 16px 20px;
             border-radius: 8px 8px 0 0;
-            font-weight: normal;
+            font-weight: 500;
             border: none;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.65rem;
-            font-family: 'Press Start 2P', cursive;
+            font-size: 0.95rem;
+            font-family: 'Rubik', sans-serif;
             position: relative;
             overflow: hidden;
             line-height: 1.6;
@@ -110,10 +110,10 @@
         }
 
         h2 {
-            font-size: 1rem;
-            font-weight: normal;
+            font-size: 1.5rem;
+            font-weight: 600;
             margin-bottom: 24px;
-            line-height: 1.6;
+            line-height: 1.4;
         }
 
         .form-group {
@@ -124,8 +124,8 @@
             display: block;
             color: #d1d5db;
             margin-bottom: 8px;
-            font-weight: normal;
-            font-size: 0.7rem;
+            font-weight: 500;
+            font-size: 0.9rem;
             line-height: 1.6;
         }
 
@@ -145,8 +145,8 @@
             border: none;
             outline: none;
             transition: all 0.3s;
-            font-size: 0.7rem;
-            font-family: 'Press Start 2P', cursive;
+            font-size: 0.95rem;
+            font-family: 'Rubik', sans-serif;
             line-height: 1.6;
         }
 
@@ -163,7 +163,7 @@
         }
 
         .char-count {
-            font-size: 0.55rem;
+            font-size: 0.8rem;
             color: #6b7280;
             margin-top: 4px;
             transition: color 0.3s ease;
@@ -180,14 +180,14 @@
 
         button[type="submit"] {
             width: 100%;
-            font-weight: normal;
+            font-weight: 600;
             padding: 16px 12px;
             border-radius: 8px;
             border: none;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.7rem;
-            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            font-family: 'Rubik', sans-serif;
             background: #fff;
             color: #000;
             margin-top: 8px;
@@ -213,7 +213,7 @@
         }
 
         footer div {
-            font-size: 0.65rem;
+            font-size: 0.9rem;
             margin-bottom: 8px;
             line-height: 1.6;
         }
@@ -234,7 +234,7 @@
             min-width: 300px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
             animation: slideIn 0.3s ease-out;
-            font-family: 'Press Start 2P', cursive;
+            font-family: 'Rubik', sans-serif;
         }
 
         .toast.success {
@@ -246,14 +246,14 @@
         }
 
         .toast-title {
-            font-weight: normal;
+            font-weight: 600;
             margin-bottom: 8px;
-            font-size: 0.65rem;
+            font-size: 0.95rem;
             line-height: 1.6;
         }
 
         .toast-message {
-            font-size: 0.55rem;
+            font-size: 0.85rem;
             color: #d1d5db;
             line-height: 1.6;
         }
@@ -395,6 +395,211 @@
 
         .tab-indicator {
             animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Mobile and Tablet Optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+                font-size: 15px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+                line-height: 1.3;
+            }
+
+            .tabs {
+                gap: 3px;
+                margin-bottom: 20px;
+            }
+
+            .tab-button {
+                padding: 12px 8px;
+                font-size: 0.85rem;
+                border-radius: 6px 6px 0 0;
+            }
+
+            .tab-indicator {
+                width: 6px;
+                height: 6px;
+                margin-right: 6px;
+            }
+
+            .form-container {
+                padding: 20px;
+                border-radius: 0 0 6px 6px;
+                border-top-right-radius: 6px;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+                margin-bottom: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 16px;
+            }
+
+            label {
+                font-size: 0.85rem;
+                margin-bottom: 6px;
+            }
+
+            input[type="text"],
+            input[type="url"],
+            select,
+            textarea {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+                border-radius: 6px;
+            }
+
+            textarea {
+                height: 120px;
+            }
+
+            .char-count {
+                font-size: 0.75rem;
+            }
+
+            button[type="submit"] {
+                padding: 14px 12px;
+                font-size: 0.95rem;
+                border-radius: 6px;
+            }
+
+            footer {
+                margin-top: 24px;
+                padding-bottom: 12px;
+            }
+
+            footer div {
+                font-size: 0.85rem;
+            }
+
+            .toast-container {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+            }
+
+            .toast {
+                min-width: auto;
+                width: 100%;
+                padding: 14px 16px;
+                margin-bottom: 10px;
+                border-radius: 6px;
+            }
+
+            .toast-title {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+
+            .toast-message {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Extra small phones */
+        @media (max-width: 360px) {
+            body {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .header h1 {
+                font-size: 1.25rem;
+            }
+
+            .tab-button {
+                padding: 10px 6px;
+                font-size: 0.8rem;
+            }
+
+            .form-container {
+                padding: 16px;
+            }
+
+            h2 {
+                font-size: 1.1rem;
+            }
+
+            input[type="text"],
+            input[type="url"],
+            select,
+            textarea {
+                padding: 9px 10px;
+                font-size: 0.85rem;
+            }
+
+            button[type="submit"] {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Tablets in portrait mode */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            body {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .form-container {
+                padding: 28px;
+            }
+
+            .tab-button {
+                padding: 14px 16px;
+            }
+        }
+
+        /* Landscape phones */
+        @media (max-width: 768px) and (orientation: landscape) {
+            textarea {
+                height: 100px;
+            }
+
+            .header {
+                margin-bottom: 16px;
+            }
+
+            .tabs {
+                margin-bottom: 16px;
+            }
+
+            .form-group {
+                margin-bottom: 14px;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            input[type="text"],
+            input[type="url"],
+            select,
+            textarea,
+            button {
+                /* Prevent zoom on focus for iOS */
+                font-size: 16px !important;
+            }
+
+            button[type="submit"]:active {
+                transform: scale(0.98);
+            }
+
+            .tab-button:active {
+                opacity: 0.8;
+            }
         }
     </style>
 </head>
