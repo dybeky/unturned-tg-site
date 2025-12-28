@@ -1,3 +1,32 @@
+/* ===== CSS Variables for Theme ===== */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #1a1a1a;
+    --bg-card: #000;
+    --text-primary: #fff;
+    --text-secondary: #9ca3af;
+    --text-muted: #d1d5db;
+    --btn-bg: #fff;
+    --btn-text: #000;
+    --btn-hover: #e5e5e5;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --particle-color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme {
+    --bg-primary: #f3f4f6;
+    --bg-secondary: #e5e7eb;
+    --bg-card: #fff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-muted: #4b5563;
+    --btn-bg: #1f2937;
+    --btn-text: #fff;
+    --btn-hover: #374151;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --particle-color: rgba(0, 0, 0, 0.3);
+}
+
 /* ===== Reset & Base Styles ===== */
 * {
     margin: 0;
@@ -7,12 +36,26 @@
 
 body {
     font-family: 'Rubik', sans-serif;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
     min-height: 100vh;
     padding: 24px;
-    color: #fff;
+    color: var(--text-primary);
     font-size: 16px;
     line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+    transition: background 0.5s ease, color 0.5s ease;
+}
+
+/* ===== Particle Canvas ===== */
+#particleCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .container {
@@ -50,11 +93,70 @@ h2 {
 
 /* ===== Content Container ===== */
 .content-container {
-    background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #000 100%);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 50%, var(--bg-card) 100%);
+    box-shadow: 0 20px 25px -5px var(--shadow);
     border-radius: 8px;
     padding: 32px;
     animation: fadeInUp 0.6s ease-out 0.2s both;
+    transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* ===== Server Status ===== */
+.server-status {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    transition: background 0.5s ease;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-dot.online {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+.status-dot.offline {
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+}
+
+/* ===== Visitor Counter ===== */
+.visitor-counter {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: background 0.5s ease;
+}
+
+.counter-label {
+    color: var(--text-secondary);
+    margin-right: 8px;
+}
+
+.counter-value {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.3rem;
 }
 
 /* ===== GitHub Content ===== */
@@ -68,15 +170,15 @@ h2 {
 }
 
 .github-content p {
-    color: #d1d5db;
+    color: var(--text-muted);
     margin-bottom: 30px;
     font-size: 1.1rem;
 }
 
 .github-link {
     display: inline-block;
-    background: #fff;
-    color: #000;
+    background: var(--btn-bg);
+    color: var(--btn-text);
     padding: 16px 32px;
     border-radius: 8px;
     text-decoration: none;
@@ -86,13 +188,62 @@ h2 {
 }
 
 .github-link:hover {
-    background: #e5e5e5;
+    background: var(--btn-hover);
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 20px var(--shadow);
 }
 
 .github-link:active {
     transform: translateY(0);
+}
+
+/* ===== Theme Toggle Button ===== */
+.theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 1000;
+    background: var(--bg-card);
+    border: 2px solid var(--text-secondary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.theme-toggle:hover {
+    transform: rotate(20deg) scale(1.1);
+    border-color: var(--text-primary);
+}
+
+.theme-toggle svg {
+    width: 24px;
+    height: 24px;
+    color: var(--text-primary);
+    transition: opacity 0.3s ease;
+}
+
+.theme-toggle .sun-icon {
+    position: absolute;
+    opacity: 0;
+}
+
+.theme-toggle .moon-icon {
+    position: absolute;
+    opacity: 1;
+}
+
+body.light-theme .theme-toggle .sun-icon {
+    opacity: 1;
+}
+
+body.light-theme .theme-toggle .moon-icon {
+    opacity: 0;
 }
 
 /* ===== Footer ===== */
@@ -100,7 +251,8 @@ footer {
     margin-top: 32px;
     text-align: center;
     padding-bottom: 16px;
-    color: #9ca3af;
+    color: var(--text-secondary);
+    transition: color 0.5s ease;
 }
 
 footer div {
@@ -136,6 +288,17 @@ footer div {
     }
     50% {
         text-shadow: 0 0 30px rgba(255, 255, 255, 0.9), 0 0 40px rgba(255, 255, 255, 0.6);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
     }
 }
 
