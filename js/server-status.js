@@ -2,6 +2,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const statusDot = document.getElementById('statusDot');
     const statusText = document.getElementById('statusText');
+    const serverIPElement = document.getElementById('serverIP');
+    const copyIpBtn = document.getElementById('copyIpBtn');
+    const copyNotification = document.getElementById('copyNotification');
 
     if (!statusDot || !statusText) return;
 
@@ -13,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         checkInterval: 30000, // Check every 30 seconds
         timeout: 10000
     };
+
+    // Store current server IP for copying
+    let currentServerIP = '';
 
     async function checkServerStatus() {
         try {
@@ -40,6 +46,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isOnline = attributes.status === 'online';
                 const players = attributes.players || 0;
                 const maxPlayers = attributes.maxPlayers || 0;
+
+                // Получаем IP и порт сервера
+                const serverIP = attributes.ip || '';
+                const serverPort = attributes.port || '';
+                if (serverIP && serverPort) {
+                    currentServerIP = `${serverIP}:${serverPort}`;
+                    if (serverIPElement) {
+                        serverIPElement.textContent = `IP: ${currentServerIP}`;
+                    }
+                }
 
                 // Обновляем статус с информацией об игроках
                 if (isOnline) {
@@ -70,6 +86,40 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             statusDot.className = 'status-dot offline';
             statusText.textContent = message || 'Сервер оффлайн';
+        }
+    }
+
+    // Copy IP functionality
+    if (copyIpBtn) {
+        copyIpBtn.addEventListener('click', async () => {
+            if (!currentServerIP) {
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(currentServerIP);
+                showCopyNotification();
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = currentServerIP;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopyNotification();
+            }
+        });
+    }
+
+    function showCopyNotification() {
+        if (copyNotification) {
+            copyNotification.classList.add('show');
+            setTimeout(() => {
+                copyNotification.classList.remove('show');
+            }, 2000);
         }
     }
 
